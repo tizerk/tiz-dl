@@ -45,4 +45,4 @@ def resolution_choice(formats):
         print("Incorrect Input: Enter the Integer Value Next to the Desired Resolution\n")
         resolution_choice(formats)
     else:
-        return formats[choice]['format_id']
+        return formats[choice - 1]['format_id']
