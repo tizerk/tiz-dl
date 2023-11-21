@@ -4,3 +4,4 @@ __pycache__
 *.webm
 *.wav
 *.mov
+.DS_Store
