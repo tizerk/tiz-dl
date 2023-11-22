@@ -4,4 +4,10 @@ __pycache__
 *.webm
 *.wav
 *.mov
+*.aiff
+*.flac
+*.ogg
+*.opus
+*.m4a
+*.aac
 .DS_Store
