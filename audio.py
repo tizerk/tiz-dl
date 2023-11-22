@@ -15,34 +15,10 @@ def audio(url, ydl, ydl_opts):
     ydl.download(url)
     input_file = f"{result["title"]}.{result["ext"]}"
 
-    match format:
-        case ".MP3":
-            output_file = f"{result["title"]}.mp3"
-            ffmpeg.input(input_file).output(output_file).run()
-        case ".AAC":
-            output_file = f"{result["title"]}.aac"
-            ffmpeg.input(input_file).output(output_file).run()
-        case ".FLAC":
-            output_file = f"{result["title"]}.flac"
-            ffmpeg.input(input_file).output(output_file).run()
-        case ".WAV":
-            output_file = f"{result["title"]}.wav"
-            ffmpeg.input(input_file).output(output_file).run()
-        case ".MOV":
-            output_file = f"{result["title"]}.mov"
-            ffmpeg.input(input_file).output(output_file).run()
-        case ".OGG":
-            output_file = f"{result["title"]}.ogg"
-            ffmpeg.input(input_file).output(output_file).run()
-        case ".OPUS":
-            output_file = f"{result["title"]}.opus"
-            ffmpeg.output(ffmpeg.input(input_file), output_file, acodec='copy').run()
-        case ".AIFF":
-            output_file = f"{result["title"]}.aiff"
-            ffmpeg.input(input_file).output(output_file).run()
-        case ".M4A":
-            output_file = f"{result["title"]}.m4a"
-            ffmpeg.input(input_file).output(output_file).run()
+    output_file = f"{result["title"]}{format}"
+    if (format != ".WEBM"):
+        ffmpeg.input(input_file).output(output_file).run()
+
     print("Download Complete!")
 
 
