@@ -1,5 +1,6 @@
 import yt_dlp
 import ffmpeg
+import os
 
 def audio(url, ydl, ydl_opts):
     ydl_opts = {
@@ -18,7 +19,7 @@ def audio(url, ydl, ydl_opts):
     output_file = f"{result["title"]}{format}"
     if (format != ".WEBM"):
         ffmpeg.input(input_file).output(output_file).run()
-
+        os.remove(input_file)
     print("Download Complete!")
 
 
