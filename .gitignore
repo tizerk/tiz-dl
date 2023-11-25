@@ -11,3 +11,5 @@ __pycache__
 *.m4a
 *.aac
 .DS_Store
+gui-design.jpg
+tkinter_examples.py
