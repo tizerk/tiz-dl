@@ -1,9 +1,7 @@
-import math
-import ffmpeg
 import yt_dlp
+import video
+import audio
 from datetime import datetime
-from video import *
-from audio import *
 
 ydl_opts = {"quiet": True,}
 ydl = yt_dlp.YoutubeDL(ydl_opts)
