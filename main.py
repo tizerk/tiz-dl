@@ -1,6 +1,6 @@
 import yt_dlp
-import video
-import audio
+from video import *
+from audio import *
 from datetime import datetime
 
 ydl_opts = {"quiet": True,}
