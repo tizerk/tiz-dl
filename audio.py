@@ -26,7 +26,7 @@ def audio(url, ydl, ydl_opts):
 def format_choice():
     print("Available Format Options:")
     count = 0
-    formats = [".MP3", ".AAC", ".FLAC", ".WAV", ".WEBM", ".MOV", ".OGG", ".OPUS", ".AIFF", ".M4A"]
+    formats = [".MP3", ".FLAC", ".WAV", ".AAC", ".WEBM", ".MOV", ".OGG", ".OPUS", ".AIFF", ".M4A"]
     for i in formats:
         count += 1
         print(f"{count}: {i}")

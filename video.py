@@ -67,7 +67,7 @@ def resolution_choice(formats):
 def format_choice():
     print("Available Format Options:")
     count = 0
-    ext_formats = [".WEBM", ".MP4", ".MOV", ".WMV", ".FLV", ".AVI", ".MKV", ".3GP", ".M4A"]
+    ext_formats = [".MP4", ".MOV", ".WEBM", ".MKV", ".AVI", ".WMV", ".FLV",  ".3GP", ".M4A"]
     for i in ext_formats:
         count += 1
         print(f"{count}: {i}")

@@ -3,6 +3,7 @@ import customtkinter as ctk
 import os
 import video
 import audio
+import main
 
 
 class RadiobuttonFrame(ctk.CTkFrame):
@@ -55,9 +56,16 @@ class App(ctk.CTk):
         )
         self.entry.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
 
+        title_var = ctk.StringVar(self, "Title: ")
+        creator_var = ctk.StringVar(self, "Creator: ")
+        date_var = ctk.StringVar(self, "Upload Date: ")
+        video_resolutions = []
         self.button = ctk.CTkButton(
             self.entry_frame,
             text="Continue",
+            command=lambda: main.get_video_data(
+                self.entry.get(), title_var, creator_var, date_var
+            ),
         )
         self.button.grid(row=0, column=1, padx=10, pady=10, sticky="nsew")
 
@@ -67,21 +75,21 @@ class App(ctk.CTk):
 
         self.label = ctk.CTkLabel(
             self.details_frame,
-            text="Title: ",
+            textvariable=title_var,
             fg_color="transparent",
             text_color="white",
         )
         self.label.grid(row=1, column=0, padx=(20, 0), pady=(10, 0), sticky="nsw")
         self.label = ctk.CTkLabel(
             self.details_frame,
-            text="Creator: ",
+            textvariable=creator_var,
             fg_color="transparent",
             text_color="white",
         )
         self.label.grid(row=2, column=0, padx=(20, 0), pady=0, sticky="nsw")
         self.label = ctk.CTkLabel(
             self.details_frame,
-            text="Upload Date: ",
+            textvariable=date_var,
             fg_color="transparent",
             text_color="white",
         )
@@ -126,10 +134,11 @@ class App(ctk.CTk):
         )
         self.scrollable_frame.grid_columnconfigure(0, weight=1)
         self.scrollable_frame_buttons = []
-        for i in range(10):
+        resolution_options = []
+        for i in range(len(resolution_options)):
             radiobutton = ctk.CTkRadioButton(
                 master=self.scrollable_frame,
-                text=f"Resolution {i}",
+                text=f"{resolution_options[i]}",
                 value=i,
                 variable=self.radio_var,
             )
@@ -145,10 +154,21 @@ class App(ctk.CTk):
         )
         self.scrollable_frame.grid_columnconfigure(0, weight=1)
         self.scrollable_frame_buttons = []
-        for i in range(10):
+        video_formats = [
+            ".MP4",
+            ".MOV",
+            ".WEBM",
+            ".MKV",
+            ".AVI",
+            ".WMV",
+            ".FLV",
+            ".3GP",
+            ".M4A",
+        ]
+        for i in range(len(video_formats)):
             radiobutton = ctk.CTkRadioButton(
                 master=self.scrollable_frame,
-                text=f"Format {i}",
+                text=f"{video_formats[i]}",
                 value=i,
                 variable=self.radio_var,
             )
@@ -164,10 +184,22 @@ class App(ctk.CTk):
         )
         self.scrollable_frame.grid_columnconfigure(0, weight=1)
         self.scrollable_frame_buttons = []
-        for i in range(10):
+        audio_formats = [
+            ".MP3",
+            ".FLAC",
+            ".WAV",
+            ".AAC",
+            ".WEBM",
+            ".MOV",
+            ".OGG",
+            ".OPUS",
+            ".AIFF",
+            ".M4A",
+        ]
+        for i in range(len(audio_formats)):
             radiobutton = ctk.CTkRadioButton(
                 master=self.scrollable_frame,
-                text=f"Format {i}",
+                text=f"{audio_formats[i]}",
                 value=i,
                 variable=self.radio_var,
             )
@@ -178,7 +210,7 @@ class App(ctk.CTk):
         self.button.grid(row=4, column=0, padx=20, pady=20, sticky="ew", columnspan=2)
         self.grid_columnconfigure(0, weight=1)
 
-    def button_callback(self):
+    def test(self):
         print("button pressed")
 
 
