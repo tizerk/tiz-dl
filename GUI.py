@@ -1,5 +1,6 @@
 from PIL import Image
 import customtkinter as ctk
+import tkinter as tk
 import os
 import video
 import audio
@@ -55,7 +56,9 @@ class App(ctk.CTk):
             placeholder_text="Enter URL Here...",
         )
         self.entry.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
-
+        self.rc_menu = tk.Menu(self.entry, tearoff=False)
+        self.rc_menu.add_command(label="Paste URL", command=self.right_click)
+        self.entry.bind("<Button-3>", self.rc_popup)
         title_var = ctk.StringVar(self, "Title: ")
         creator_var = ctk.StringVar(self, "Creator: ")
         date_var = ctk.StringVar(self, "Upload Date: ")
@@ -103,27 +106,6 @@ class App(ctk.CTk):
         self.tabview.tab("Video").grid_columnconfigure(1, weight=1)
         self.tabview.tab("Audio").grid_columnconfigure(0, weight=1)
         self.tabview.tab("Audio").grid_columnconfigure(1, weight=1)
-
-        # self.radiobutton_frame = RadiobuttonFrame(
-        #     self.tabview.tab("Video"), "Resolution", [0, 1, 2, 3]
-        # )
-        # self.radiobutton_frame.grid(
-        #     row=3, column=0, padx=10, pady=(10, 0), sticky="nsw"
-        # )
-
-        # self.radiobutton_frame = RadiobuttonFrame(
-        #     self.tabview.tab("Video"), "Format", [0, 1, 2, 3]
-        # )
-        # self.radiobutton_frame.grid(
-        #     row=3, column=1, padx=10, pady=(10, 0), sticky="nsw"
-        # )
-
-        # self.radiobutton_frame = RadiobuttonFrame(
-        #     self.tabview.tab("Audio"), "Format", [0, 1, 2, 3]
-        # )
-        # self.radiobutton_frame.grid(
-        #     row=3, column=0, padx=10, pady=(10, 0), sticky="nsw"
-        # )
 
         self.radio_var = ctk.IntVar(value=0)
         self.scrollable_frame = ctk.CTkScrollableFrame(
@@ -212,6 +194,12 @@ class App(ctk.CTk):
 
     def test(self):
         print("button pressed")
+
+    def rc_popup(self, e):
+        self.rc_menu.tk_popup(e.x_root, e.y_root)
+
+    def right_click(self):
+        self.entry.insert(0, self.clipboard_get())
 
 
 app = App()
