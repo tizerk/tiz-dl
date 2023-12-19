@@ -2,38 +2,18 @@ from PIL import Image
 import customtkinter as ctk
 import tkinter as tk
 import os
+import main
 import video
 import audio
-import main
 
 
-class RadiobuttonFrame(ctk.CTkFrame):
-    def __init__(self, master, title, values):
-        super().__init__(master)
-        self.grid_columnconfigure(0, weight=1)
-        self.values = values
-        self.title = title
-        self.radiobuttons = []
-        self.variable = ctk.StringVar(value="")
+class ToplevelWindow(ctk.CTkToplevel):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.geometry("200x250")
 
-        self.title = ctk.CTkLabel(
-            self, text=self.title, fg_color="gray30", corner_radius=6
-        )
-        self.title.grid(row=0, column=0, padx=10, pady=(10, 0), sticky="ew")
-        self.title.grid_columnconfigure(0, weight=1)
-
-        for i, value in enumerate(self.values):
-            radiobutton = ctk.CTkRadioButton(
-                self, text=value, value=value, variable=self.variable
-            )
-            radiobutton.grid(row=i + 1, column=0, padx=10, pady=(10, 0), sticky="w")
-            self.radiobuttons.append(radiobutton)
-
-    def get(self):
-        return self.variable.get()
-
-    def set(self, value):
-        self.variable.set(value)
+        self.label = ctk.CTkLabel(self, text="ToplevelWindow")
+        self.label.pack(padx=20, pady=20)
 
 
 class App(ctk.CTk):
@@ -62,12 +42,14 @@ class App(ctk.CTk):
         title_var = ctk.StringVar(self, "Title: ")
         creator_var = ctk.StringVar(self, "Creator: ")
         date_var = ctk.StringVar(self, "Upload Date: ")
-        video_resolutions = []
         self.button = ctk.CTkButton(
             self.entry_frame,
             text="Continue",
-            command=lambda: main.get_video_data(
-                self.entry.get(), title_var, creator_var, date_var
+            command=lambda: self.video_data(
+                title_var,
+                creator_var,
+                date_var,
+                video_resolution_variable,
             ),
         )
         self.button.grid(row=0, column=1, padx=10, pady=10, sticky="nsew")
@@ -109,56 +91,6 @@ class App(ctk.CTk):
 
         self.radio_var = ctk.IntVar(value=0)
         self.scrollable_frame = ctk.CTkScrollableFrame(
-            self.tabview.tab("Video"), label_text="Resolution"
-        )
-        self.scrollable_frame.grid(
-            row=0, column=0, padx=(10, 10), pady=(10, 10), sticky="nsew"
-        )
-        self.scrollable_frame.grid_columnconfigure(0, weight=1)
-        self.scrollable_frame_buttons = []
-        resolution_options = []
-        for i in range(len(resolution_options)):
-            radiobutton = ctk.CTkRadioButton(
-                master=self.scrollable_frame,
-                text=f"{resolution_options[i]}",
-                value=i,
-                variable=self.radio_var,
-            )
-            radiobutton.grid(row=i, column=0, padx=10, pady=(0, 20))
-            self.scrollable_frame_buttons.append(radiobutton)
-
-        self.radio_var = ctk.IntVar(value=0)
-        self.scrollable_frame = ctk.CTkScrollableFrame(
-            self.tabview.tab("Video"), label_text="Format"
-        )
-        self.scrollable_frame.grid(
-            row=0, column=1, padx=(10, 10), pady=(10, 10), sticky="nsew"
-        )
-        self.scrollable_frame.grid_columnconfigure(0, weight=1)
-        self.scrollable_frame_buttons = []
-        video_formats = [
-            ".MP4",
-            ".MOV",
-            ".WEBM",
-            ".MKV",
-            ".AVI",
-            ".WMV",
-            ".FLV",
-            ".3GP",
-            ".M4A",
-        ]
-        for i in range(len(video_formats)):
-            radiobutton = ctk.CTkRadioButton(
-                master=self.scrollable_frame,
-                text=f"{video_formats[i]}",
-                value=i,
-                variable=self.radio_var,
-            )
-            radiobutton.grid(row=i, column=0, padx=10, pady=(0, 20))
-            self.scrollable_frame_buttons.append(radiobutton)
-
-        self.radio_var = ctk.IntVar(value=0)
-        self.scrollable_frame = ctk.CTkScrollableFrame(
             self.tabview.tab("Audio"), label_text="Format"
         )
         self.scrollable_frame.grid(
@@ -178,19 +110,69 @@ class App(ctk.CTk):
             ".AIFF",
             ".M4A",
         ]
+        audio_format_variable = ctk.IntVar(value=0)
         for i in range(len(audio_formats)):
             radiobutton = ctk.CTkRadioButton(
                 master=self.scrollable_frame,
                 text=f"{audio_formats[i]}",
                 value=i,
-                variable=self.radio_var,
+                variable=audio_format_variable,
             )
             radiobutton.grid(row=i, column=0, padx=10, pady=(0, 20))
             self.scrollable_frame_buttons.append(radiobutton)
 
-        self.button = ctk.CTkButton(self, text="Start!")
+        self.button = ctk.CTkButton(
+            self,
+            text="Start!",
+            command=lambda: self.download(
+                audio_format_variable.get(),
+                video_format_variable.get(),
+                video_resolution_variable.get(),
+                audio_formats,
+                video_formats,
+            ),
+        )
         self.button.grid(row=4, column=0, padx=20, pady=20, sticky="ew", columnspan=2)
         self.grid_columnconfigure(0, weight=1)
+        self.radio_var = ctk.IntVar(value=0)
+        self.scrollable_frame = ctk.CTkScrollableFrame(
+            self.tabview.tab("Video"), label_text="Format"
+        )
+        self.scrollable_frame.grid(
+            row=0, column=1, padx=(10, 10), pady=(10, 10), sticky="nsew"
+        )
+        self.scrollable_frame.grid_columnconfigure(0, weight=1)
+        self.scrollable_frame_buttons = []
+        video_formats = [
+            ".MP4",
+            ".WEBM",
+            ".MOV",
+            ".MKV",
+            ".AVI",
+            ".WMV",
+            ".FLV",
+            ".3GP",
+        ]
+        video_format_variable = ctk.IntVar(value=0)
+        for i in range(len(video_formats)):
+            radiobutton = ctk.CTkRadioButton(
+                master=self.scrollable_frame,
+                text=f"{video_formats[i]}",
+                value=i,
+                variable=video_format_variable,
+            )
+            radiobutton.grid(row=i, column=0, padx=10, pady=(0, 20))
+            self.scrollable_frame_buttons.append(radiobutton)
+        self.radio_var = ctk.IntVar(value=0)
+        video_resolution_variable = ctk.StringVar(value="2160p")
+        self.scrollable_frame = ctk.CTkScrollableFrame(
+            self.tabview.tab("Video"), label_text="Resolution"
+        )
+        self.scrollable_frame.grid(
+            row=0, column=0, padx=(10, 10), pady=(10, 10), sticky="nsew"
+        )
+        self.scrollable_frame.grid_columnconfigure(0, weight=1)
+        self.scrollable_frame_buttons = []
 
     def test(self):
         print("button pressed")
@@ -200,6 +182,68 @@ class App(ctk.CTk):
 
     def right_click(self):
         self.entry.insert(0, self.clipboard_get())
+
+    def resolution_buttons(
+        self,
+        video_resolution_variable,
+        resolution_choices,
+    ):
+        self.scrollable_frame_buttons = []
+        for i in range(len(resolution_choices)):
+            radiobutton = ctk.CTkRadioButton(
+                master=self.scrollable_frame,
+                text=f"{resolution_choices[len(resolution_choices) - 1 - i]['format_note']}",
+                value=f"{resolution_choices[len(resolution_choices) - 1 - i]['format_note']}",
+                variable=video_resolution_variable,
+            )
+            radiobutton.grid(row=i, column=0, padx=10, pady=(0, 20))
+            self.scrollable_frame_buttons.append(radiobutton)
+        return resolution_choices
+
+    def video_data(
+        self,
+        title_var,
+        creator_var,
+        date_var,
+        video_resolution_variable,
+    ):
+        self.resolution_buttons(
+            video_resolution_variable,
+            main.get_video_data(
+                self.entry.get(),
+                title_var,
+                creator_var,
+                date_var,
+            ),
+        )
+
+    def open_toplevel(self, message):
+        if self.toplevel_window is None or not self.toplevel_window.winfo_exists():
+            self.toplevel_window = ToplevelWindow(self)
+            self.toplevel_window.label.configure(text=message)
+        else:
+            self.toplevel_window.focus()
+
+    def download(
+        self,
+        audio_choice,
+        video_format_choice,
+        video_resolution_choice,
+        audio_formats,
+        video_formats,
+    ):
+        if main.url_check(self.entry.get()):
+            if self.tabview.get() == "Video":
+                print(int(video_resolution_choice[:-1]))
+                video.download_video(
+                    self.entry.get(),
+                    int(video_resolution_choice[:-1]),
+                    video_formats[video_format_choice],
+                )
+            else:
+                audio.download_audio(self.entry.get(), audio_formats[audio_choice])
+        else:
+            self.open_toplevel("URL not found!  Please re-enter the URL.")
 
 
 app = App()
