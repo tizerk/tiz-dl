@@ -99,16 +99,14 @@ class App(ctk.CTk):
         self.scrollable_frame.grid_columnconfigure(0, weight=1)
         self.scrollable_frame_buttons = []
         audio_formats = [
-            ".MP3",
-            ".FLAC",
-            ".WAV",
-            ".AAC",
-            ".WEBM",
-            ".MOV",
-            ".OGG",
-            ".OPUS",
-            ".AIFF",
-            ".M4A",
+            "MP3",
+            "FLAC",
+            "WAV",
+            "AAC",
+            "WEBM (OPUS)",
+            "OGG (VORBIS)",
+            "AIFF",
+            "M4A",
         ]
         audio_format_variable = ctk.IntVar(value=0)
         for i in range(len(audio_formats)):
@@ -144,14 +142,11 @@ class App(ctk.CTk):
         self.scrollable_frame.grid_columnconfigure(0, weight=1)
         self.scrollable_frame_buttons = []
         video_formats = [
-            ".MP4",
-            ".WEBM",
-            ".MOV",
-            ".MKV",
-            ".AVI",
-            ".WMV",
-            ".FLV",
-            ".3GP",
+            "MP4 (VP9)",
+            "MP4 (H.264)",
+            "WEBM",
+            "MOV",
+            "MKV",
         ]
         video_format_variable = ctk.IntVar(value=0)
         for i in range(len(video_formats)):

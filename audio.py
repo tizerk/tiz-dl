@@ -14,8 +14,8 @@ def download_audio(url, format):
     ydl.download(url)
     input_file = f"{result["title"]}.{result["ext"]}"
 
-    output_file = f"{result["title"]}{format}"
-    if (format != ".WEBM"):
+    output_file = f"{result["title"]}.{format}"
+    if (format != "WEBM (OPUS)"):
         ffmpeg.input(input_file).output(output_file).run()
         os.remove(input_file)
     print("Download Complete!")
