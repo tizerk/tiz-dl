@@ -10,6 +10,7 @@ __pycache__
 *.opus
 *.m4a
 *.aac
+*.spec
 .DS_Store
 gui-design.jpg
 tkinter_examples.py

@@ -1,7 +1,5 @@
-from PIL import Image
 import customtkinter as ctk
 import tkinter as tk
-import os
 import main
 import video
 import audio
